@@ -19,8 +19,11 @@ int main() {
         std::cout << "Filter is ready!\n";
     }
 
-    qwe.update({{1, 1}, 1, 2});
+    qwe.update(std::vector<double>{
+        {1.0},
+        {1.0}
+    });
 
-    std::cout << "Hello, World!\n";
+    std::cout << "Hello, World!\n" << qwe.get_matrix() << "\n";
     return 0;
 }

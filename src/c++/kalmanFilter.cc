@@ -59,3 +59,28 @@ auto KalmanFilter::update(Matrix<double> new_data) -> void
     x_hat = x_hat + K * (new_data - H * x_hat);
     P = (matrix::identity_matrix<double>(m_dimension) - K * H) * P;
 }
+
+auto KalmanFilter::update(std::vector<double> new_data) -> void
+{
+    Matrix buffer {new_data, 1, new_data.size()};
+    update(buffer);
+}
+
+auto KalmanFilter::get_vector() const -> std::vector<double> 
+{
+    std::vector<double> buffer;
+    for (size_t i = 0; i < x_hat.number_row(); i++)
+    {
+        for (size_t j = 0; j < x_hat.number_col(); j++)
+        {
+            buffer.emplace_back(x_hat(j, i));
+        }
+    }
+    
+    return buffer;
+}
+
+auto KalmanFilter::get_matrix() const -> Matrix<double>
+{
+    return x_hat;
+}

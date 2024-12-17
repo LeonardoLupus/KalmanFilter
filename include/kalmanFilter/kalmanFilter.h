@@ -23,4 +23,8 @@ public:
     // auto init_filter_file() -> bool;
 
     auto update(Matrix<double> new_data) -> void;
+    auto update(std::vector<double> new_data) -> void;
+
+    auto get_vector() const -> std::vector<double>;
+    auto get_matrix() const -> Matrix<double>;
 };

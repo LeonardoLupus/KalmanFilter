@@ -36,14 +36,14 @@ target_sources(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/src/c++/kalmanFilter.cc
 )
 
-target_link_libraries(${PROJECT_NAME}
-        PRIVATE
-        matrix
-)
+target_link_libraries(${PROJECT_NAME} matrix)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>$<INSTALL_INTERFACE:include> 
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/c++>$<INSTALL_INTERFACE:src/c++> 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/c++>$<INSTALL_INTERFACE:src/c++>
+        # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/submodules>$<INSTALL_INTERFACE:/submodules>
+        # PRIVATE
+        # ${CMAKE_CURRENT_SOURCE_DIR}/submodules
 )
 set(PROJECT_NAMESPACE kalmanFilter::)
 message(STATUS "[${PROJECT_NAME}] installing ${PROJECT_NAME} in namespace ${PROJECT_NAMESPACE}")

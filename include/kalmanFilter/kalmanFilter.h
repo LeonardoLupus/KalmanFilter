@@ -5,17 +5,16 @@
 
 class KalmanFilter
 {
-private:
     unsigned int m_dimension;
+    Matrix<double> m_X;
 
-    Matrix<double> A; // Матрица перехода состояния
+public:
+    Matrix<double> F; // Матрица перехода состояния
     Matrix<double> H; // Матрица наблюдения
     Matrix<double> Q; // Ковариационная матрица шума процесса
     Matrix<double> R; // Ковариационная матрица шума измерения
     Matrix<double> P; // Ковариационная матрица ошибки оценки
-    Matrix<double> I; // Единичная матрица
-    Matrix<double> x_hat;
-public:
+
     KalmanFilter(unsigned int dimension);
     ~KalmanFilter() = default;
 

@@ -3,7 +3,7 @@
 
 int main() {
     KalmanFilter qwe(2);
-    Matrix<double> A ({{1, 0},
+    Matrix<double> F ({{1, 0},
                        {0, 1}});
     Matrix<double> H ({{1, 0},
                        {0, 1}});
@@ -13,15 +13,15 @@ int main() {
                        {0, 1}});
     Matrix<double> P ({{1, 0},
                        {0, 1}});
-    std::vector config {A, H, Q, R, P};
+    std::vector config {F, H, Q, R, P};
 
     if (qwe.init_filter_manual(config)) {
         std::cout << "Filter is ready!\n";
     }
 
     qwe.update(std::vector<double>{
-        {1.0},
-        {1.0}
+        1.0,
+        1.0
     });
 
     std::cout << "Hello, World!\n" << qwe.get_matrix() << "\n";

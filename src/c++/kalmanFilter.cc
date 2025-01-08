@@ -4,12 +4,12 @@
 
 KalmanFilter::KalmanFilter(unsigned int dimension): m_dimension(dimension)
 {
-    A.resize(m_dimension, m_dimension);
+    F.resize(m_dimension, m_dimension);
     H.resize(m_dimension, m_dimension);
     Q.resize(m_dimension, m_dimension);
     R.resize(m_dimension, m_dimension);
     P.resize(m_dimension, m_dimension);
-    x_hat.resize(1, m_dimension);
+    m_X.resize(1, m_dimension);
 }
 
 auto KalmanFilter::init_filter_manual(const std::vector<Matrix<double>>& config) -> bool
@@ -20,7 +20,7 @@ auto KalmanFilter::init_filter_manual(const std::vector<Matrix<double>>& config)
     }
     if (config[0].number_col() != m_dimension || config[0].number_row() != m_dimension)
     {
-        throw std::runtime_error("Error! Dimension of manual entered Matrix A Wrong!");
+        throw std::runtime_error("Error! Dimension of manual entered Matrix F Wrong!");
     }
     if (config[1].number_col() != m_dimension || config[1].number_row() != m_dimension)
     {
@@ -39,7 +39,7 @@ auto KalmanFilter::init_filter_manual(const std::vector<Matrix<double>>& config)
         throw std::runtime_error("Error! Dimension of manual entered Matrix P Wrong!");
     }
     
-    A = config[0];
+    F = config[0];
     H = config[1];
     Q = config[2];
     R = config[3];
@@ -51,12 +51,12 @@ auto KalmanFilter::init_filter_manual(const std::vector<Matrix<double>>& config)
 auto KalmanFilter::update(Matrix<double> new_data) -> void
 {
     // Прогноз
-    x_hat = A * x_hat;
-    P = A * P * A.Tr() + Q;
+    m_X = F * m_X;
+    P = F * P * F.Tr() + Q;
 
     // Обновление
     auto K = P * H.Tr() * (H * P * H.Tr() + R).inverse();
-    x_hat = x_hat + K * (new_data - H * x_hat);
+    m_X = m_X + K * (new_data - H * m_X);
     P = (matrix::identity_matrix<double>(m_dimension) - K * H) * P;
 }
 
@@ -69,11 +69,11 @@ auto KalmanFilter::update(std::vector<double> new_data) -> void
 auto KalmanFilter::get_vector() const -> std::vector<double> 
 {
     std::vector<double> buffer;
-    for (size_t i = 0; i < x_hat.number_row(); i++)
+    for (size_t i = 0; i < m_X.number_row(); i++)
     {
-        for (size_t j = 0; j < x_hat.number_col(); j++)
+        for (size_t j = 0; j < m_X.number_col(); j++)
         {
-            buffer.emplace_back(x_hat(j, i));
+            buffer.emplace_back(m_X(j, i));
         }
     }
     
@@ -82,5 +82,5 @@ auto KalmanFilter::get_vector() const -> std::vector<double>
 
 auto KalmanFilter::get_matrix() const -> Matrix<double>
 {
-    return x_hat;
+    return m_X;
 }
